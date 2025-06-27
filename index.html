@@ -57,12 +57,23 @@
       text-align: center;
     }
     .recommend-note-top {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       font-size: 26px;
       color: #222;
       font-weight: bold;
       line-height: 1.6;
     }
+    /* ---------- NEW: 顶部提示虚线框 ---------- */
+    .instruction-box{
+      padding:10px;
+      margin: -30px auto 20px auto;
+      max-width:720px;
+      font-size:0.9rem;            /* 与 small-gray 一致 */
+      color: #d8000c;             /* 红色字体 */                 /* 与 small-gray 一致 */
+      text-align:center;
+      line-height:1.4;
+    }
+    .instruction-box.faded{color:#777;               /* 目标灰色，可按需调整 */}
 
     /* ================================
        主容器：左右布局
@@ -84,11 +95,7 @@
       flex: 1 1 400px;
       max-width: 500px;
     }
-    .main-image {
-      width: 100%;
-      display: block;
-      border-radius: 4px;
-      margin-bottom: 15px;
+    .main-image {width:100%;display:block;border-radius:4px;margin-left:20px;margin-right:20px;margin-bottom:20px;margin-top:20px;
     }
     .carousel-container {
       display: flex;
@@ -161,7 +168,7 @@
       font-weight: bold;
     }
     .small-gray {
-      color: #777;
+      color: #222;
       font-size: 0.9rem;
       margin-bottom: 0.5rem;
     }
@@ -275,7 +282,11 @@
     <div class="recommend-note-top">
       Based on your needs, we recommend the following sofa for you.
     </div>
-
+    <!-- NEW: 顶部提示框 -->
+    <div class="instruction-box">
+      Please take a moment to review the product below. If you're considering buying it, click "Add to cart" when ready. Then, kindly click “Return to survey” to continue.
+    </div>
+    
     <div class="container">
       <!-- 左侧：默认主图 S1.png + 轮播 + AI Note -->
       <div class="product-images">
@@ -288,7 +299,7 @@
 
         <!-- 在此处新增AI提示, 颜色绿色 -->
         <div id="aiNote">
-          Note: This interface contains AI-generated elements.
+          Note: These pictures are AI-generated.
         </div>
       </div>
 
@@ -333,7 +344,11 @@
       </div>
     </div>
   </div>
-
+    <!-- 返回调查按钮 -->
+    <div class="return-survey">
+      <button id="returnBtn">← Return to survey</button>
+    </div>
+  </div>
   <script>
     /*
       21张: B1, S1..S4, D1_*, D2_*, D3_*, D4_*
@@ -544,6 +559,23 @@
         selectedOptionsDiv.textContent = "";
       }
     }
+      /* 30 000 毫秒后淡化提示文字 */
+    setTimeout(() => {
+    document.querySelector('.instruction-box')?.classList.add('faded');
+    }, 10000);
+      // ✅ 新增：5秒后显示“Return to Survey”按钮
+    setTimeout(() => {
+      document.getElementById("returnBtn").style.display = "inline-block";
+    }, 8000);
+
+      document.getElementById("returnBtn").addEventListener("click",()=>{
+            if(window.opener && !window.opener.closed) {
+              window.opener.postMessage("gotoQ1","*"); // 通知 Qualtrics 跳到下一题
+              window.close();
+            }else {
+        location.href = "https://mcmasterxceei.co1.qualtrics.com/jfe/form/SV_9SSBQ79be8yHGS2"; // fallback
+      }
+    });
   </script>
 </body>
 </html>
